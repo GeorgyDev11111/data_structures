@@ -15,7 +15,6 @@ function List() {
 
 
 // methods
-
 List.prototype.push_back = function (data) {
   let node = new Node(data)
 
