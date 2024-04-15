@@ -32,6 +32,8 @@ List.prototype.push_back = function (data) {
 }
 
 List.prototype.get = function (index) {
+  if(index < 0 || index >= this.size) return undefined
+  
   let inner_index = 0
   let current = this.head
 
