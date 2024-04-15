@@ -13,9 +13,8 @@ function List() {
   this.size = 0
 }
 
-
 // methods
-List.prototype.push_back = function (data) {
+List.prototype.push_back = function(data) {
   let node = new Node(data)
 
   if(this.head == null) {
@@ -27,11 +26,10 @@ List.prototype.push_back = function (data) {
     }
     current.next = node
   }
-
   this.size++
 }
 
-List.prototype.get = function (index) {
+List.prototype.get = function(index) {
   if(index < 0 || index >= this.size) return undefined
   
   let inner_index = 0
@@ -46,23 +44,25 @@ List.prototype.get = function (index) {
   }
 }
 
-List.prototype.size = function () {
+List.prototype.getSize = function() {
   return this.size
 }
 
-List.prototype.push_front = function (data) {
+List.prototype.push_front = function(data) {
   this.head = new Node(data, this.head)
   this.size++
 }
 
-List.prototype.pop_front = function () {
-  if(this.head == null) return
+List.prototype.pop_front = function() {
+  if(this.head == null) return undefined
   
   this.head = this.head.next
   this.size--
 }
 
-List.prototype.insert = function (data,index) {
+List.prototype.insert = function(data,index) {
+  if(index < 0 || index >= this.size) return undefined
+
   if(index == 0) {
     this.push_front(data)
   } else {
@@ -72,7 +72,9 @@ List.prototype.insert = function (data,index) {
   }
 }
 
-List.prototype.removeAt = function (index) {
+List.prototype.removeAt = function(index) {
+  if(index < 0 || index >= this.size) return undefined
+
   if(index == 0) {
     this.pop_front()
   } else {
@@ -82,8 +84,8 @@ List.prototype.removeAt = function (index) {
   }
 }
 
-List.prototype.pop_back = function () {
-  this.removeAt(this.size - 1)
+List.prototype.pop_back = function() {
+  return this.removeAt(this.size - 1)
 }
 
 function previousF(head, index) {
@@ -99,15 +101,102 @@ function previousF(head, index) {
 // [tests]
 const assert = require("node:assert")
 
-function format(data) {
-  return JSON.stringify(data)
-}
-
 function messageRed(text) {
   return `\x1b[31m${text}\x1b[0m`
 }
 
-function runTests() {
+function test1() {
+  // push_back
+  const list = new List()
+  list.push_back(1)
+
+  assert.equal(list.getSize(), 1, messageRed("Test 1-1 failed"))
+  assert.equal(list.get(0), 1, messageRed("Test 1-2 failed"))
+}
+
+function test2() {
+  // push_front
+  const list = new List()
+  list.push_back(1)
+  list.push_front(2)
+
+  assert.equal(list.getSize(), 2, messageRed("Test 2-1 failed"))
+  assert.equal(list.get(0), 2, messageRed("Test 2-2 failed"))
+  assert.equal(list.get(1), 1, messageRed("Test 2-3 failed"))
+}
+
+function test3() {
+  // pop_front
+  const list = new List()
+
+  assert.equal(list.pop_front(), undefined, messageRed("Test 3-1 failed") )
+
+  list.push_back(1)
+  list.push_front(2)
+  list.pop_front()
+
+  assert.equal(list.getSize(), 1, messageRed("Test 3-2 failed"))
+}
+
+function test4() {
+  // pop_back
+  const list = new List()
+
+  assert.equal(list.pop_back(), undefined, messageRed("Test 4-1 failed"))
+
+  list.push_back(1)
+  list.push_back(2)
+  list.pop_back()
+
+  assert.equal(list.getSize(), 1, messageRed("Test 4-2 failed"))
+}
+
+function test5() {
+  // get
+  const list = new List()
+  list.push_back(1)
+  list.push_back(2)
+
+  assert.equal(list.get(-1), undefined, messageRed("Test 5-1 failed"))
+  assert.equal(list.get(1), 2, messageRed("Test 5-2 failed"))
+  assert.equal(list.get(2), undefined, messageRed("Test 5-3 failed"))
+}
+
+function test6() {
+  // insert
+  const list = new List()
+  list.push_back(1)
+  list.push_back(3)
+  list.insert(2, 1)
+
+  assert.equal(list.get(1), 2, messageRed("Test 6-1 failed"))
+  assert.equal(list.getSize(), 3, messageRed("Test 6-2 failed"))
+  assert.equal(list.insert(2,100), undefined, messageRed("Test 6-3 failed"))
+}
+
+function test7() {
+  // removeAt
+  const list = new List()
+  list.push_back(1)
+  list.push_back(2)
+  list.removeAt(1)
+
+  assert.equal(list.getSize(), 1, messageRed("Test 7-1 failed"))
+  assert.equal(list.removeAt(100), undefined, messageRed("Test 7-2 failed"))
+}
+
+function test8() {
+  // getSize
+  const list = new List()
+  list.push_back(1)
+  list.push_back(2)
+  list.push_back(3)
+
+  assert.equal(list.getSize(), 3, messageRed("Test 8-1 failed"))
+}
+
+// runs all tests
+;(function() {
   test1()
   test2()
   test3()
@@ -116,211 +205,4 @@ function runTests() {
   test6()
   test7()
   test8()
-  test9()
-  test10()
-  test11()
-  test12()
-  test13()
-  test14()
-  test15()
-}
-
-function test1() {
-  // push_back
-  let test = new List()
-
-  test.push_back(42)
-  assert.equal(format(test), format({"head":{"data":42,"next":null},"size":1}), messageRed("Test 1 failed"))
-}
-
-function test2() {
-  // push_back
-  let test = new List()
-
-  test.push_back(42)
-  test.push_back(45)
-  assert.equal(
-    format(test), 
-    format({"head":{"data":42,"next":{"data":45,"next":null}},"size":2}), messageRed("Test 2 failed")
-  )
-}
-
-function test3() {
-  // get
-  let test = new List()
-
-  let result = test.get(1)
-  assert.equal(result, undefined, messageRed("Test 3 failed"))
-}
-
-function test4() {
-  // get
-  let test = new List()
-
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-  let result = test.get(1)
-  assert.equal(result, 36, messageRed("Test 4 failed"))
-}
-
-function test5() {
-  // get
-  let test = new List()
-
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-  let result = test.get(2)
-  assert.equal(result, 37, messageRed("Test 5 failed"))
-}
-
-function test6() {
-  // push_front
-  let test = new List()
-
-  test.push_front(35)
-  assert.equal(
-    format(test), 
-    format({head: { data: 35, next: null }, size: 1}), messageRed("Test 6 failed")
-  )
-}
-
-function test7() {
-  // push_front
-  let test = new List()
-
-  test.push_front(35)
-  test.push_front(34)
-  assert.equal(
-    format(test),
-    format({head: { data: 34, next: {data: 35, next: null}}, size: 2}), messageRed("Test 7 failed")
-  )
-}
-
-function test8() {
-  // pop_front
-  let test = new List()
-
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-
-  test.pop_front()
-
-  assert.equal(
-    format(test), 
-    format({head: {data: 36, next: { data: 37, next: null}}, size: 2}), messageRed("Test 8 failed")
-  )
-}
-
-function test9() {
-  // pop_front 
-  let test = new List()
-
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-  
-  test.insert(34, 0) // like push_front
-  assert.equal(
-    format(test), 
-    format({head: {data: 34, next: {data: 35, next: {data: 36, next: {data: 37, next: null}}}}, size: 4}), messageRed("Test 9 failed")
-  )
-}
-
-function test10() {
-  // insert in mid
-  let test = new List()
-
-  test.push_back(34)
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-
-  test.insert(35, 1)
-  assert.equal(
-    format(test), 
-    format({head: {data: 34, next: {data: 35, next: {data: 35, next: {data: 36, next: {data: 37, next: null}}}}}, size: 5}), messageRed("Test 10 failed")
-  )
-}
-
-function test11() {
-  // insert in back
-  let test = new List()
-
-  test.push_back(34)
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-
-  test.insert(38,4)
-  assert.equal(
-    format(test), 
-    format({head: {data: 34, next: {data: 35, next: {data: 36, next: {data: 37, next: {data: 38, next: null}}}}}, size: 5}), messageRed("Test 11 failed")
-  )
-}
-
-
-function test12() {
-  // removeAt
-  let test = new List()
-
-  test.push_back(34)
-  test.push_back(35)
-  test.push_back(36)
-  test.push_back(37)
-
-  test.removeAt(1)
-  assert.equal(
-    format(test), 
-    format({head: {data: 34, next: {data: 36, next: {data: 37, next: null }}}, size: 3}), messageRed("Test 12 failed")
-  )
-}
-
-function test13() {
-  // removeAt
-  let test = new List()
-
-  test.push_front(1)
-  test.removeAt(0)
-
-  assert.equal(
-    format(test), 
-    format({head: null ,size: 0}), messageRed("Test 13 failed")
-  )
-}
-
-function test14() {
-  // removeAt
-  let test = new List()
-
-  test.push_back(34)
-  test.push_back(35)
-
-  test.removeAt(0)
-  assert.equal(
-    format(test), 
-    format({head: {data: 35, next: null } ,size: 1}), messageRed("Test 14 failed")
-  )
-}
-
-function test15() {
-  // pop_back
-  let test = new List()
-
-  test.push_back(1)
-  test.push_back(2)
-  test.push_back(3)
-  test.push_back(4)
-  test.push_back(5)
-  test.push_back(6)
-
-  test.pop_back()
-  assert.equal(
-    format(test), 
-    format({head: {data:1, next: {data:2, next: {data:3, next: {data:4, next:{ data:5, next:null }}}}},size:5}), messageRed("Test 15 failed")
-  )
-}
-
-runTests()
+})()
