@@ -88,6 +88,18 @@ function test8(List) {
 
   assert.equal(list.getSize(), 1, messageRed("Test 8-1 failed"))
   assert.equal(list.removeAt(100), undefined, messageRed("Test 8-2 failed"))
+
+  list.push_back(2)
+  list.push_back(3)
+  list.push_back(4)
+  list.removeAt(3)
+
+  assert.equal(list.getSize(), 3, messageRed("Test 8-3 failed"))
+
+  list.push_back(4)
+  list.removeAt(2)
+
+  assert.equal(list.head.next.next.data, 4)
 }
 
 function test9(List) {

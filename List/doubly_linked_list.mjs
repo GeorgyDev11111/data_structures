@@ -23,16 +23,21 @@ List.prototype.pop_front = function() {
   this.size--
 }
 
+List.prototype.pop_back = function() {
+  if(this.tail != null) {
+    this.tail = this.tail.prev
+    this.size--
+  }
+}
+
 List.prototype.push_back = function(data) {
   let node = new Node(data)
 
   if(this.size == 0) {
-    this.head = node
-    this.tail = node // update a link on tail
+    this.head = this.tail = node
   } else {
     node.prev = this.tail
-    this.tail.next = node
-    this.tail = node // update a link on tail
+    this.tail.next = this.tail = node
   }
 
   this.size++
@@ -47,16 +52,7 @@ List.prototype.clear = function() {
 List.prototype.get = function(index) {
   if(index < 0 || index >= this.size) return undefined
 
-  let current
-
-  if(index <= this.size / 2) {
-    current = this.head
-    for(let i = 0; i < index; i++ ) current = current.next
-  } else {
-    current = this.tail
-    for(let i = this.size - 1; i > index; i--) current = current.prev
-  }
-
+  let current = currentNode.call(this,index)
   return current.data
 }
 
@@ -69,25 +65,13 @@ List.prototype.push_front = function(data) {
   this.size++
 }
 
-
 List.prototype.insert = function(data, index) {
   if(index < 0 || index > this.size) return undefined
 
   if(index == 0) return this.push_front(data)
   if(index == this.size) return this.push_back(data)
 
-  let current
-  if(index < this.size / 2) {
-    current = this.head
-    for(let i = 0; i < index; i++) {
-      current = current.next
-    }
-  } else {
-    current = this.tail
-    for(let i = this.size - 1; i > index; i--) {
-      current = current.prev
-    }
-  }
+  let current = currentNode.call(this, index)
 
   let node = new Node(data, current, current.prev)
   current.prev.next = node
@@ -96,5 +80,28 @@ List.prototype.insert = function(data, index) {
   this.size++
 }
 
-List.prototype.removeAt = function(index) {}
-List.prototype.pop_back = function() {}
+List.prototype.removeAt = function(index) {
+  if(index < 0 || index >= this.size) return undefined
+
+  if(index == 0) return this.pop_front()
+  if(index == this.size - 1) return this.pop_back()
+  
+  let current = currentNode.call(this,index)
+
+  current.prev.next = current.next
+  current.next.prev = current.prev
+
+  this.size--
+}
+
+function currentNode(index) {
+  let current
+  if(index <= this.size / 2) {
+    current = this.head
+    for(let i = 0; i < index; i++ ) current = current.next
+  } else {
+    current = this.tail
+    for(let i = this.size - 1; i > index; i--) current = current.prev
+  }
+  return current
+}
