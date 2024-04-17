@@ -71,7 +71,7 @@ List.prototype.insert = function(data,index) {
   if(index == 0) {
     this.push_front(data)
   } else {
-    let previous = previousF.call(this, index) 
+    let previous = previousNode.call(this, index) 
     previous.next = new Node(data, previous.next)
     this.size++
   }
@@ -83,7 +83,7 @@ List.prototype.removeAt = function(index) {
   if(index == 0) {
     this.pop_front()
   } else {
-    let previous = previousF.call(this, index)
+    let previous = previousNode.call(this, index)
     previous.next = previous.next.next
     this.size--
   }
@@ -93,7 +93,7 @@ List.prototype.pop_back = function() {
   return this.removeAt(this.size - 1)
 }
 
-function previousF(index) {
+function previousNode(index) {
   let current = this.head
   for(let i = 0; i < index - 1; i++) {
     current = current.next

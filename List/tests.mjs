@@ -1,5 +1,5 @@
 // tests for "singly linked list" and "doubly linked list"
-import assert from "node:assert"
+import assert, { equal } from "node:assert"
 
 function messageRed(text) {
   return `\x1b[31m${text}\x1b[0m`
@@ -129,4 +129,102 @@ function testsForList(List) {
   console.log("Success!")
 }
 
-export { testsForList }
+
+// tests for Stack
+function testStack1(Stack) {
+  // push
+  const list = new Stack()
+  
+  list.push(1)
+  list.push(2)
+  list.push(3)
+  
+  assert.equal(list.getSize(), 3, "Test for Stack 1-1 failed")
+}
+
+function testStack2(Stack) {
+  // pop
+  const list = new Stack()
+
+  list.push(1)
+  list.push(2)
+
+  const two = list.pop()
+  const one = list.pop()
+  const undef = list.pop()
+
+  assert.equal(two, 2, "Test for Stack 2-1 failed")
+  assert.equal(one, 1, "Test for Stack 2-2 failed")
+  assert.equal(undef, undefined, "Test for Stack 2-3 failed")
+}
+
+function testStack3(Stack) {
+  // top
+  const list = new Stack()
+
+  list.push(1)
+  list.push(2)
+
+  const two = list.getTop()
+
+  assert.equal(two, 2, "Test for Stack 3-1 failed")
+  assert.equal(list.getSize(), 2, "Test for Stack 3-2 failed")
+}
+
+function testsForStack(Stack) {
+  testStack1(Stack)
+  testStack2(Stack)
+  testStack3(Stack)
+  console.log("Success!")
+}
+
+
+// tests for Queue
+function testQueue1(Queue) {
+  // push
+  const queue = new Queue()
+
+  queue.push(1)
+  queue.push(2)
+
+  assert.equal(queue.getSize(), 2, "Test for Queue 1-1 failed")
+}
+
+function testQueue2(Queue) {
+  // pop
+  const queue = new Queue()
+
+  queue.push(1)
+  queue.push(2)
+  queue.pop()
+
+  assert.equal(queue.getSize(), 1, "Test for Queue 2-1 failed")
+  assert.equal(queue.head.data, 2, "Test for Queue 2-2 failed")
+}
+
+function testQueue3(Queue) {
+  // front & back & getSize
+  const queue = new Queue()
+
+  queue.push(1)
+  queue.push(2)
+  queue.push(3)
+
+  let one = queue.front()
+  let three = queue.back()
+
+  assert.equal(one, 1, "Test for Queue 3-1 failed")
+  assert.equal(three, 3, "Test for Queue 3-2 failed")
+  assert.equal(queue.getSize(), 3, "Test for Queue 3-3 failed")
+}
+
+
+function testsForQueue(Queue) {
+  testQueue1(Queue)
+  testQueue2(Queue)
+  testQueue3(Queue)
+  console.log("Success")
+}
+
+
+export { testsForList, testsForStack, testsForQueue }

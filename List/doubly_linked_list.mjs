@@ -52,7 +52,7 @@ List.prototype.clear = function() {
 List.prototype.get = function(index) {
   if(index < 0 || index >= this.size) return undefined
 
-  let current = currentNode.call(this,index)
+  let current = currentNode.call(this, index)
   return current.data
 }
 
@@ -86,7 +86,7 @@ List.prototype.removeAt = function(index) {
   if(index == 0) return this.pop_front()
   if(index == this.size - 1) return this.pop_back()
   
-  let current = currentNode.call(this,index)
+  let current = currentNode.call(this, index)
 
   current.prev.next = current.next
   current.next.prev = current.prev
